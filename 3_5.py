@@ -24,7 +24,7 @@ print weight[1]
 
 #plot
 line_x = np.arange(0.1, 0.9, 0.1)
-line_y = np.array((-weight[0]*line_x-0.01)/weight[1])
+line_y = np.array((-weight[0]*line_x)/weight[1])
 p1 = plt.scatter(x[0:8], y[0:8], color = 'g', marker = 'o', label = 'good')
 p2 = plt.scatter(x[8:17], y[8:17], color = 'r', marker = 'x', label = 'bad')
 plt.plot(line_x, line_y)
