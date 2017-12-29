@@ -43,14 +43,14 @@ def splitContinuousDataSet(dataSet, axis, value, direction):
 	for column in dataSet:
 		if direction == 0:
 			if column[axis] > value:
-				reducedColumn = column[:axis]
-				reducedColumn.extend(column[axis+1:])
-				retDataset.append(reducedColumn)
+				# reducedColumn = column[:axis]
+				# reducedColumn.extend(column[axis+1:])
+				retDataset.append(column)
 		else:
 			if column[axis] <= value:
-				reducedColumn = column[:axis]
-				reducedColumn.extend(column[axis+1:])
-				retDataset.append(reducedColumn)
+				# reducedColumn = column[:axis]
+				# reducedColumn.extend(column[axis+1:])
+				retDataset.append(column)
 
 	return retDataset
 

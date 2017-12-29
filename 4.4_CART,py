@@ -6,8 +6,8 @@ import pandas as pd
 from math import log
 import operator
 
-def entropy(dataset):
-	ent = 0.0
+def Gini(dataset):
+	gini = 1.0
 	countclass = {}
 	total_class = [example[-1] for example in dataset]
 	for clss in total_class:
@@ -16,8 +16,8 @@ def entropy(dataset):
 		countclass[clss] += 1
 	for key in countclass:
 		prob = float(countclass[key]) / len(total_class)
-		ent = ent - prob * log(prob, 2)
-	return ent
+		gini = gini - prob * prob
+	return gini
 
 def splitsperate(dataset, id, value):
 	returndataset = []
@@ -45,8 +45,7 @@ def splitcontinue(dataset, id, value, up = False):
 
 def choosebestfeature(dataset, features):
 	num_feature = len(features)
-	baseent = entropy(dataset)
-	maxgain = 0.0
+	MinGini = 100
 	bestFeature = -1
 	bestvalue_all = 0.0
 	bestvalue = 0.0
@@ -56,30 +55,28 @@ def choosebestfeature(dataset, features):
 			splitlist = []
 			for j in range(len(featurevalue) - 1):
 				splitlist.append((sorted(featurevalue)[j] + sorted(featurevalue)[j+1]) / 2.0)
-			minent = 100
+			mingini = 100
 			for value in splitlist:
-				newent = 0.0
+				newgini = 0.0
 				dataset1 = splitcontinue(dataset, i, value)
 				prob1 = float(len(dataset1)) / float(len(dataset))
-				newent = newent + prob1 * entropy(dataset1)
+				newgini = newgini + prob1 * Gini(dataset1)
 				dataset2 = splitcontinue(dataset, i, value, up = True)
 				prob2 = float(len(dataset2)) / float(len(dataset))
-				newent = newent + prob2 * entropy(dataset2)
-				if newent < minent:
-					minent = newent
+				newgini = newgini + prob2 * Gini(dataset2)
+				if newgini < mingini:
+					mingini = newgini
 					bestvalue = value
-			gain = baseent - minent
 		else:
 			featurevalue = [example[i] for example in dataset]
 			values = set(featurevalue)
-			entnew = 0.0
+			mingini = 0.0
 			for value in values:
 				dataset3 = splitsperate(dataset, i, value)
 				prob = float(len(dataset3)) / float(len(dataset))
-				entnew = entnew + prob * entropy(dataset3)
-			gain = baseent - entnew
-		if gain > maxgain:
-			maxgain = gain
+				mingini = mingini + prob * Gini(dataset3)
+		if MinGini > mingini:
+			MinGini = mingini
 			bestFeature = i
 			bestvalue_all = bestvalue
 	if type(dataset[0][bestFeature]).__name__ == 'float' or type(dataset[0][bestFeature]).__name__ == 'int':
@@ -130,8 +127,8 @@ def createTree(dataset, features, data_full, features_full):
 			mytree[feature_best][value] = vote(classlist)
 	return mytree
 
-df = pd.read_csv('watermelon_4_3.csv')
-data = df.values[:, 1:].tolist()
+df = pd.read_csv('watermelon_4_2.csv')
+data = df.values[:11, 1:].tolist()
 data_full = data[:]
 features = df.columns.values[1:-1].tolist()
 features_full = features[:]
