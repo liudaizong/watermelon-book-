@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd 
 from math import log
 import operator
+from treePlotter import *
 '''
 dataset: 数据集，每一行为一组数据
 value：对应的类的值
@@ -106,22 +107,21 @@ def chooseBestFeaturetoSplit(dataSet, features):
 
 	return bestFeature
 
-#当到叶子节点时，仍有1或0，则投票决定最多的那个当预测
 def majorityCnt(classList):
-	classcount = {}
-	for vote in classList:
-		if vote not in classcount.keys():
-			classcount[vote] = 0
-		classcount[vote] += 1
+    classCount={}
+    for vote in classList:
+        if vote not in classCount.keys(): classCount[vote] = 0
+        classCount[vote] += 1
+    sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)
 
-	return max(classcount)
+    return sortedClassCount[0][0]
 
 def creatTree(dataSet, features, data_full, features_full):
 	classList = [example[-1] for example in dataSet]
 	if classList.count(classList[0]) == len(classList):
 		return classList[0]
 	if len(dataSet[0]) == 1:
-		return majorityCnt[classList]
+		return majorityCnt(classList)
 	bestFeat = chooseBestFeaturetoSplit(dataSet, features)
 	bestFeatFeature = features[bestFeat]
 	mytree = {bestFeatFeature:{}}
@@ -151,3 +151,4 @@ features = df.columns.values[1:-1].tolist()
 features_full = features[:]
 myTree = creatTree(data, features, data_full, features_full)
 print myTree
+createPlot(myTree)

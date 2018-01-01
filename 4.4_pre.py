@@ -102,34 +102,6 @@ def vote(classlist):
 	else:
 		return 0
 
-def classify(inputTree, features_labels, testvec):
-	firststr = inputTree.keys()[0]
-	if '<=' in firststr:
-		value = float(firststr.split('<=')[-1])
-		feature_key = firststr.split('<=')[0]
-		second_dict = inputTree[firststr]
-		feature_index = features_labels.index(feature_key)
-		if testvec[feature_index] <= value:
-			judge = 1
-		else:
-			judge = 0
-		for key in second_dict.keys():
-			if judge == int(key):
-				if type(second_dict[key]).__name__ == 'dict':
-					classlabel = classify(second_dict[key], features_labels, testvec)
-				else:
-					classlabel = second_dict[key]
-	else:
-		second_dict = inputTree[firststr]
-		feature_index = features_labels.index(firststr)
-		for key in second_dict.keys():
-			if testvec[feature_index] == key:
-				if type(second_dict[key]).__name__ == 'dict':
-					classlabel = classify(second_dict[key], features_labels, testvec)
-				else:
-					classlabel = second_dict[key]
-	return classlabel
-
 def testing_feature(feature, data_train, data_test, labels):
 	class_list = [example[-1] for example in data_train]
 	feature_index = labels.index(feature)
