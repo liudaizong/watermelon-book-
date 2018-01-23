@@ -45,7 +45,6 @@ while (1):
 		c[min_dim,num_c[min_dim,0]] = i 
 		num_c[min_dim,0] += 1
 
-
 	centroids_new = np.zeros((k,2))
 	for i in range(k):
 		if num_c[i,0] == 0:
