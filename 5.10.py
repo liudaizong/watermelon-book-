@@ -66,22 +66,26 @@ print(cnn)  # net architecture
 optimizer = torch.optim.Adam(cnn.parameters(), lr=LR)   
 loss_func = nn.CrossEntropyLoss() 
 
-for epoch in range(EPOCH):
-    for step, (x, y) in enumerate(train_loader):   # gives batch data, normalize x when iterate train_loader
-        b_x = Variable(x)   # batch x
-        b_y = Variable(y)   # batch y
+if not os.path.exists('./cnn.pkl'):
+    for epoch in range(EPOCH):
+        for step, (x, y) in enumerate(train_loader):   # gives batch data, normalize x when iterate train_loader
+            b_x = Variable(x)   # batch x
+            b_y = Variable(y)   # batch y
 
-        output = cnn(b_x)[0]               # cnn output
-        loss = loss_func(output, b_y)   # cross entropy loss
-        optimizer.zero_grad()           # clear gradients for this training step
-        loss.backward()                 # backpropagation, compute gradients
-        optimizer.step()                # apply gradients
-        if step % 10 == 0:
-            test_output, last_layer = cnn(test_x)
-            pred_y = torch.max(test_output, 1)[1].data.squeeze()
-            accuracy = sum(pred_y == test_y) / float(test_y.size(0))
-            print('Epoch: ', epoch, '| train loss: %.4f' % loss.data[0], '| test accuracy: %.2f' % accuracy)
-
+            output = cnn(b_x)[0]               # cnn output
+            loss = loss_func(output, b_y)   # cross entropy loss
+            optimizer.zero_grad()           # clear gradients for this training step
+            loss.backward()                 # backpropagation, compute gradients
+            optimizer.step()                # apply gradients
+            if step % 10 == 0:
+                test_output, last_layer = cnn(test_x)
+                pred_y = torch.max(test_output, 1)[1].data.squeeze()
+                accuracy = sum(pred_y == test_y) / float(test_y.size(0))
+                print('Epoch: ', epoch, '| train loss: %.4f' % loss.data[0], '| test accuracy: %.2f' % accuracy)
+    # Save the Model
+    torch.save(cnn.state_dict(), 'cnn.pkl')
+else:
+	cnn.load_state_dict(torch.load('cnn.pkl'))
 test_output, _ = cnn(test_x[:10])
 #test_output, _ = cnn(test_x)
 pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
