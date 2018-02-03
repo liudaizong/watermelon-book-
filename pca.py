@@ -35,4 +35,10 @@ feature = eig_pairs[0][1]
 #z
 new_data_reduced = (np.dot(feature.T, data.T)).T
 plt.plot(new_data_reduced[:,0],[1.2]*10,'*',color='green')
+
+
+U,S,V = np.linalg.svd(cov)
+Ureduce = U[:, 0]
+z = np.dot(data, Ureduce)
+plt.plot(z, np.zeros(z.shape), 'og')
 plt.show()

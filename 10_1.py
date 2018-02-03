@@ -14,7 +14,7 @@ def norm(vec1, vec2):
 k = 3
 distance = np.zeros(len(data))
 for i in np.arange(0.22, 0.78, 0.02):
-	for j in np.arange(0.02, 0.8, 0.02):
+	for j in np.arange(0.02, 0.48, 0.02):
 		for l in range(len(data)):
 			distance[l] = norm(np.array([i, j]), data[l,:])
 		arr = sorted(distance)
